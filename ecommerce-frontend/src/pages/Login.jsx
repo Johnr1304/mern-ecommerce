@@ -72,9 +72,6 @@ const Login = () => {
             Register
           </Link>
         </p>
-        <p className="text-xs text-center text-gray-400 pt-2">
-          Demo: admin@example.com / admin123 or user@example.com / user1234
-        </p>
       </form>
     </div>
   );
