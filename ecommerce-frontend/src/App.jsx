@@ -27,7 +27,9 @@ import { fetchCurrentUser } from "./redux/thunks/authThunks";
 function App() {
   const dispatch = useDispatch();
 
-  const { token } = useSelector((state) => state.auth);
+  const { token, isAuthenticated } = useSelector(
+    (state) => state.auth
+  );
 
   // Validate stored token when the application loads
   useEffect(() => {
@@ -46,15 +48,30 @@ function App() {
       <main className="flex-1">
         <Routes>
 
-          {/* ==================== PUBLIC ROUTES ==================== */}
+          {/* ==================== HOME ROUTE ==================== */}
 
-          {/* Opening the website redirects to Login */}
+          {/* 
+            If logged in:
+              / → Home / Products
+
+            If logged out:
+              / → Login
+          */}
           <Route
             path="/"
-            element={<Navigate to="/login" replace />}
+            element={
+              isAuthenticated ? (
+                <Home />
+              ) : (
+                <Navigate to="/login" replace />
+              )
+            }
           />
 
-          {/* Product details are publicly accessible */}
+
+          {/* ==================== PUBLIC ROUTES ==================== */}
+
+          {/* Product details can be viewed without login */}
           <Route
             path="/products/:id"
             element={<ProductDetail />}
@@ -128,11 +145,17 @@ function App() {
           </Route>
 
 
-          {/* ==================== FALLBACK ROUTE ==================== */}
+          {/* ==================== FALLBACK ==================== */}
 
           <Route
             path="*"
-            element={<Navigate to="/login" replace />}
+            element={
+              isAuthenticated ? (
+                <Navigate to="/" replace />
+              ) : (
+                <Navigate to="/login" replace />
+              )
+            }
           />
 
         </Routes>
