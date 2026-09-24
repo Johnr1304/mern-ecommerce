@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
 // Components
@@ -46,17 +46,18 @@ function App() {
       <main className="flex-1">
         <Routes>
 
-          {/* Public Routes */}
-          <Route path="/" element={<Home />} />
+          {/* ==================== PUBLIC ROUTES ==================== */}
 
+          {/* Opening the website redirects to Login */}
+          <Route
+            path="/"
+            element={<Navigate to="/login" replace />}
+          />
+
+          {/* Product details are publicly accessible */}
           <Route
             path="/products/:id"
             element={<ProductDetail />}
-          />
-
-          <Route
-            path="/cart"
-            element={<Cart />}
           />
 
           <Route
@@ -74,14 +75,22 @@ function App() {
             element={<Register />}
           />
 
-          {/* Protected Routes */}
+
+          {/* ==================== PROTECTED ROUTES ==================== */}
+
           <Route element={<ProtectedRoute />}>
 
-            <Route 
-            path="/profile" 
-            element={<Profile />} 
+            {/* Cart requires login */}
+            <Route
+              path="/cart"
+              element={<Cart />}
             />
-            
+
+            <Route
+              path="/profile"
+              element={<Profile />}
+            />
+
             <Route
               path="/checkout"
               element={<Checkout />}
@@ -99,26 +108,31 @@ function App() {
 
           </Route>
 
-          {/* Admin Routes */}
 
-           <Route
-             element={<ProtectedRoute requireAdmin={true} />}
-           >
-           <Route
-            path="/admin/products"
-            element={<AdminProducts />}
-          />
+          {/* ==================== ADMIN ROUTES ==================== */}
 
           <Route
-            path="/admin/orders"
-            element={<AdminOrders />}
-            />
-           </Route>
+            element={<ProtectedRoute requireAdmin={true} />}
+          >
 
-          {/* Fallback Route */}
+            <Route
+              path="/admin/products"
+              element={<AdminProducts />}
+            />
+
+            <Route
+              path="/admin/orders"
+              element={<AdminOrders />}
+            />
+
+          </Route>
+
+
+          {/* ==================== FALLBACK ROUTE ==================== */}
+
           <Route
             path="*"
-            element={<Home />}
+            element={<Navigate to="/login" replace />}
           />
 
         </Routes>
